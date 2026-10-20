@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0f12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Fit Together</title>
+<style>
+:root{
+  --bg:#0d0f12;--card:#171a1f;--card2:#1f232a;--line:#2a2f37;
+  --text:#f4f6f8;--muted:#9aa3ae;--accent:#22c55e;--accent2:#16a34a;
+  --accent-soft:rgba(34,197,94,.14);--blue:#3b82f6;--danger:#ef4444;--warn:#f59e0b;
+  --radius:18px;--shadow:0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.4}
+body{min-height:100vh;min-height:100dvh;overscroll-behavior-y:none}
+#app{max-width:640px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit;border:0;cursor:pointer;background:none;touch-action:manipulation}
+input,select{font:inherit;color:inherit}
+h1,h2,h3{margin:0}
+.muted{color:var(--muted)}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+/* Generic */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 20px;border-radius:16px;font-weight:800;font-size:16px;letter-spacing:.03em;transition:transform .08s,background .2s,opacity .2s;user-select:none}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);color:#04110a}
+.btn.secondary{background:var(--card2);border:1px solid var(--line)}
+.btn.ghost{background:rgba(255,255,255,.08)}
+.btn.danger{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.35)}
+.btn.text{background:none;color:var(--muted);min-height:48px}
+.btn.full{width:100%}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.topbar h2{font-size:22px;font-weight:800;flex:1}
+.iconbtn{width:48px;height:48px;border-radius:14px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.iconbtn:active{transform:scale(.95)}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty .big{font-size:42px;margin-bottom:10px}
+
+/* Home */
+.hero{padding:26px 4px 22px}
+.logo{font-size:34px;font-weight:900;letter-spacing:.06em;line-height:1}
+.logo span{color:var(--accent)}
+.couple{margin-top:8px;font-size:18px;color:var(--muted);font-weight:600}
+.resume{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;background:linear-gradient(135deg,rgba(34,197,94,.22),rgba(34,197,94,.06));border:1px solid rgba(34,197,94,.45);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px}
+.resume-title{font-weight:800;font-size:17px;margin-top:2px}
+.resume-go{font-weight:800;color:var(--accent);white-space:nowrap}
+.wcards{display:grid;gap:12px}
+.wcard{width:100%;display:flex;align-items:center;gap:16px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:transform .08s,border-color .2s}
+.wcard:active{transform:scale(.98)}
+.wcard.next{border-color:rgba(34,197,94,.55)}
+.wletter{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;background:var(--accent-soft);color:var(--accent);flex-shrink:0}
+.wbody{flex:1;min-width:0}
+.wname{font-weight:900;font-size:19px;letter-spacing:.04em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{font-size:11px;letter-spacing:.08em;padding:3px 8px;border-radius:999px;background:var(--accent);color:#04110a;font-weight:800}
+.wfocus{color:var(--text);opacity:.85;margin-top:2px}
+.wmeta{color:var(--muted);font-size:14px;margin-top:4px}
+.warrow{font-size:30px;color:var(--muted)}
+.menu{display:grid;gap:10px;margin-top:22px}
+.menu .btn{justify-content:flex-start;padding:0 18px;font-weight:700;letter-spacing:0}
+.menu .btn .ic{width:32px;font-size:20px;text-align:center}
+.menu .btn .chev{margin-left:auto;color:var(--muted);font-size:22px}
+
+/* Training */
+.tbar{display:flex;align-items:center;gap:10px}
+.tbar-mid{flex:1;min-width:0;text-align:center}
+.tw{font-weight:900;font-size:18px;letter-spacing:.04em}
+.tsub{color:var(--muted);font-size:14px;margin-top:2px}
+.tsub b{color:var(--text)}
+.pbar{height:6px;background:var(--card2);border-radius:999px;overflow:hidden;margin:14px 0 12px}
+.pbar>div{height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
+.dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.dot{width:34px;height:34px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:800;color:var(--muted)}
+.dot.done{background:var(--accent-soft);border-color:rgba(34,197,94,.45);color:var(--accent)}
+.dot.cur{background:var(--text);color:var(--bg);border-color:var(--text)}
+.exname{font-size:26px;font-weight:900;letter-spacing:.02em;text-transform:uppercase;line-height:1.15}
+.focus{margin-top:8px;font-size:15px;color:var(--muted)}
+.focus b{color:#fcd34d}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:700;font-size:15px}
+.chip.acc{color:var(--accent);border-color:rgba(34,197,94,.4)}
+.howto{margin-top:12px;min-height:46px;font-size:15px;background:rgba(59,130,246,.14);color:#93c5fd;border:1px solid rgba(59,130,246,.35)}
+.persons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 12px;box-shadow:var(--shadow)}
+.pcard.p2{border-top:3px solid var(--blue)}
+.pcard.p1{border-top:3px solid var(--accent)}
+.pname{font-weight:900;font-size:16px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pprev{font-size:13px;color:var(--muted);margin:3px 0 10px;min-height:18px}
+.pprev b{color:var(--text)}
+.wrow{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.step{width:100%;min-height:50px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-size:24px;font-weight:700;flex-shrink:0}
+.step:active{background:#2a2f37}
+.winput{grid-column:1 / -1;order:-1;min-width:0;position:relative;display:flex;align-items:center;background:#0f1216;border:2px solid var(--line);border-radius:12px;transition:border-color .2s}
+.winput:focus-within{border-color:var(--accent)}
+.winput input{width:100%;min-width:0;background:none;border:0;outline:0;text-align:center;font-size:30px;font-weight:900;padding:0 30px;height:60px}
+.winput span{position:absolute;right:12px;font-size:14px;color:var(--muted);font-weight:700;pointer-events:none}
+.bwnote{font-size:11px;color:var(--muted);margin-top:6px;text-align:center}
+.prevs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.prev{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;min-width:0}
+.prev.p1,.note.p1{border-top:3px solid var(--accent)}
+.prev.p2,.note.p2{border-top:3px solid var(--blue)}
+.prev-h{display:flex;flex-direction:column}
+.pn{font-weight:900;font-size:14px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pd{font-size:12px;color:var(--muted)}
+.pw{font-weight:800;font-size:16px;margin-top:4px;line-height:1.3}
+.pnote{margin-top:6px;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.ptext{font-size:13px;color:var(--muted);font-style:italic}
+.rbadge{display:inline-block;font-size:12px;font-weight:800;padding:3px 8px;border-radius:999px}
+.r-light.rbadge{background:rgba(59,130,246,.18);color:#93c5fd}
+.r-good.rbadge{background:rgba(34,197,94,.18);color:#86efac}
+.r-heavy.rbadge{background:rgba(245,158,11,.18);color:#fcd34d}
+.shead,.srow{display:grid;grid-template-columns:38px 1fr 1fr 50px;gap:6px;align-items:center}
+.shead{padding:0 8px 6px;font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.shead span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shead .p1{color:var(--accent)}.shead .p2{color:#93c5fd}
+.srows{display:grid;gap:8px}
+.srow{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px}
+.srow.done{border-color:var(--accent);background:rgba(34,197,94,.07)}
+.sl{display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.sl b{font-size:22px;color:var(--text);line-height:1}
+.wc{display:grid;grid-template-columns:30px minmax(0,1fr) 30px;gap:3px;align-items:center;min-width:0}
+.wc button{height:46px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-size:20px;font-weight:700;padding:0}
+.wc button:active{background:#2a2f37}
+.wc input{height:46px;width:100%;min-width:0;text-align:center;font-size:19px;font-weight:900;background:#0f1216;border:2px solid var(--line);border-radius:10px;outline:0;padding:0 2px}
+.wc input:focus{border-color:var(--accent)}
+.wc .pv{grid-column:1 / -1;text-align:center;font-size:11px;color:var(--muted);margin-top:2px}
+.ckbtn{height:50px;border-radius:12px;border:2px solid var(--muted);font-size:24px;font-weight:900;color:#04110a}
+.srow.done .ckbtn{background:var(--accent);border-color:var(--accent)}
+.notes{display:grid;gap:8px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.rchips{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.rchip{min-height:44px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-size:13px;font-weight:800;padding:0 4px}
+.rchip.r-light.on{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.rchip.r-good.on{background:var(--accent);border-color:var(--accent);color:#04110a}
+.rchip.r-heavy.on{background:var(--warn);border-color:var(--warn);color:#1a1000}
+.ninput{width:100%;min-height:46px;background:#0f1216;border:2px solid var(--line);border-radius:10px;padding:0 12px;font-size:15px;outline:0}
+.ninput:focus{border-color:var(--accent)}
+.psets{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.section-t{margin:18px 2px 8px;display:flex;justify-content:space-between;align-items:center}
+.sets{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.setbtn{min-height:62px;border-radius:14px;background:var(--card);border:2px solid var(--line);font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;gap:8px}
+.setbtn .ck{width:24px;height:24px;border-radius:7px;border:2px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:15px}
+.setbtn.done{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.setbtn.done .ck{background:var(--accent);border-color:var(--accent);color:#04110a}
+.setbtn:active{transform:scale(.96)}
+.alldone{margin-top:10px;padding:12px 14px;border-radius:14px;background:var(--accent-soft);color:var(--accent);font-weight:700;text-align:center}
+.restbtn{margin-top:14px;min-height:60px;font-size:17px}
+.footer{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(to top,var(--bg) 70%,rgba(13,15,18,0));padding:14px 16px calc(14px + env(safe-area-inset-bottom));z-index:20}
+.footer-in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+.footer .btn{min-height:62px;font-size:17px}
+.pulse{animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}50%{box-shadow:0 0 0 10px rgba(34,197,94,0)}}
+
+/* Timer */
+.timer{position:fixed;inset:0;z-index:60;background:rgba(10,12,15,.97);display:none;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px 20px calc(24px + env(safe-area-inset-bottom))}
+.timer.open{display:flex}
+.timer-label{font-size:18px;font-weight:900;letter-spacing:.2em;text-align:center;color:var(--muted)}
+.timer-ex{text-align:center;font-weight:700;margin-top:6px;font-size:16px}
+.ring{--p:1;width:min(78vw,340px);height:min(78vw,340px);border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p) * 1turn),#23272e 0);display:flex;align-items:center;justify-content:center}
+.ring-inner{width:88%;height:88%;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.timer-num{font-size:min(22vw,110px);font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
+.timer-sub{color:var(--muted);font-weight:700;margin-top:6px}
+.timer-btns{display:flex;gap:12px;width:100%;max-width:360px}
+.timer-btns .btn{flex:1}
+.timer .main{width:100%;max-width:360px;min-height:64px;font-size:18px}
+.timer.done{background:#0b3d1f;animation:flash .5s 4}
+.timer.done .timer-label{color:#bbf7d0}
+.timer.done .ring{background:var(--accent)}
+.timer.done .timer-num{font-size:min(16vw,80px);color:var(--accent)}
+.timer.done .timer-btns,.timer.done .tHide{display:none}
+@keyframes flash{50%{background:#15803d}}
+.tpill{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:30;display:none;background:var(--accent);color:#04110a;font-weight:900;font-size:18px;padding:12px 18px;border-radius:999px;box-shadow:var(--shadow);font-variant-numeric:tabular-nums}
+.tpill.show{display:block}
+
+/* Modal / sheet */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.65);display:none;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+.sheet{width:100%;max-width:640px;max-height:92vh;max-height:92dvh;overflow:auto;background:var(--card);border-radius:24px 24px 0 0;border:1px solid var(--line);padding:20px 18px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.sheet-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.sheet-head h3{flex:1;font-size:21px;font-weight:900;text-transform:uppercase;letter-spacing:.02em}
+.sheet-text{color:var(--muted);margin:0 0 18px}
+.sheet-btns{display:grid;gap:10px}
+.steps{display:grid;gap:12px}
+.stepcard{display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:10px}
+.ph{aspect-ratio:1;border-radius:12px;background:radial-gradient(circle at 50% 35%,#252b34,#14171c);border:1px solid #2f3540;position:relative;overflow:hidden}
+.ph svg{width:100%;height:100%;display:block}
+.ph .n{position:absolute;top:5px;left:6px;width:24px;height:24px;border-radius:8px;background:var(--accent);color:#04110a;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;line-height:1}
+.stepcard .t b{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.tips{margin:16px 0 4px;padding:14px 16px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:16px}
+.tips h4{margin:0 0 8px;color:#fcd34d;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+.tips ul{margin:0;padding-left:18px}
+.tips li{margin:4px 0}
+.equip{font-size:14px;color:var(--muted);margin:-6px 0 14px}
+
+/* History */
+.hlist{display:grid;gap:10px}
+.hitem{width:100%;text-align:left;display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.hitem:active{transform:scale(.98)}
+.hdate{font-weight:800;font-size:17px}
+.hw{margin-top:2px}
+.hstat{margin-top:4px;font-size:14px;font-weight:700}
+.ok{color:var(--accent)}
+.part{color:var(--warn)}
+.hl{width:46px;height:46px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;flex-shrink:0}
+.dex{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}
+.dex-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.dex-n{font-weight:800}
+.dex-s{font-size:14px;color:var(--muted);white-space:nowrap}
+.dex-w{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.dex-w div{background:var(--card2);border-radius:12px;padding:8px 10px}
+.dex-w small{display:block;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dex-w b{font-size:15px;display:block}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.summary div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.summary b{display:block;font-size:20px}
+.summary small{color:var(--muted);font-size:12px}
+
+/* Progress */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:5px;margin-bottom:12px}
+.seg button{min-height:48px;border-radius:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 8px}
+.seg button.on{background:var(--accent);color:#04110a}
+.select{width:100%;min-height:56px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:0 16px;font-size:16px;font-weight:700;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%;background-size:6px 6px;background-repeat:no-repeat}
+.chartwrap{margin-top:14px;padding:12px 8px 6px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.plist{margin-top:12px}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--line)}
+.prow:last-child{border-bottom:0}
+.prow .d{color:var(--muted);font-weight:700;min-width:80px}
+.prow .w{font-weight:900;font-size:18px}
+.prow .delta{font-size:13px;font-weight:800;min-width:70px;text-align:right}
+.up{color:var(--accent)}.down{color:var(--danger)}.same{color:var(--muted)}
+
+/* Settings */
+.field{margin-bottom:16px}
+.field label{display:block;font-weight:800;font-size:14px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.tinput{width:100%;min-height:56px;background:#0f1216;border:2px solid var(--line);border-radius:14px;padding:0 16px;font-size:18px;font-weight:700;outline:0}
+.tinput:focus{border-color:var(--accent)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.toggle:last-child{border-bottom:0}
+.toggle .tt{font-weight:700}
+.toggle small{display:block;color:var(--muted);font-weight:500}
+.sw{width:58px;height:34px;border-radius:999px;background:#2a2f37;position:relative;flex-shrink:0;transition:background .2s}
+.sw::after{content:"";position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw.on{background:var(--accent)}
+.sw.on::after{transform:translateX(24px)}
+.stepsel{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stepsel button{min-height:48px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-weight:800}
+.stepsel button.on{background:var(--accent);color:#04110a;border-color:var(--accent)}
+.stitle{font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:24px 4px 10px}
+
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:#f4f6f8;color:#0d0f12;font-weight:800;padding:12px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:90;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:350px){
+  .persons{grid-template-columns:1fr}
+  .exname{font-size:22px}
+}
+@media (min-width:700px){
+  #app{padding-top:32px}
+  .overlay{align-items:center}
+  .sheet{border-radius:24px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- Rusttimer -->
+<div id="timer" class="timer" aria-live="polite">
+  <div>
+    <div class="timer-label" id="timerLabel">RUST</div>
+    <div class="timer-ex" id="timerEx"></div>
+  </div>
+  <div class="ring" id="ring"><div class="ring-inner"><div class="timer-num" id="timerNum">0:00</div><div class="timer-sub" id="timerSub">resterend</div></div></div>
+  <div class="timer-btns">
+    <button class="btn ghost" data-action="tAdj" data-v="-15">−15 sec</button>
+    <button class="btn ghost" data-action="tAdj" data-v="15">+15 sec</button>
+  </div>
+  <button class="btn primary main" id="timerMain" data-action="tClose">Rust overslaan</button>
+  <button class="btn text tHide" data-action="tHide">Verbergen (timer loopt door)</button>
+</div>
+<button id="tpill" class="tpill" data-action="tShow"></button>
+
+<!-- Modal / sheet -->
+<div id="overlay" class="overlay"><div class="sheet" id="sheet"></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+'use strict';
+
+/* =========================================================
+   DATA: OEFENINGEN
+   ========================================================= */
+const STEP_LABELS = ['Startpositie', 'Positie / grip', 'Beweging', 'Eindpositie', 'Terug naar start'];
+
+const EXERCISES = {
+  altcurl: { muscles: 'Biceps', name: 'Alternating Dumbbell Curl', equip: 'Dumbbells', type: 'weight',
+    steps: ['Sta rechtop, dumbbells langs het lichaam.',
+            'Handpalmen naar voren (onderhandse grip), ellebogen tegen de romp.',
+            'Krul één dumbbell omhoog en draai de pols licht naar buiten.',
+            'Dumbbell op schouderhoogte, biceps aangespannen.',
+            'Laat langzaam zakken en wissel van arm.'],
+    tips: ['Ellebogen stil houden.', 'Niet zwaaien met de rug.', 'Reps zijn per arm.'] },
+  arnold: { muscles: 'Schouders (voor- en zijkant), triceps', name: 'Seated Arnold Press', equip: 'Dumbbells + bankje', type: 'weight',
+    steps: ['Zit rechtop op de bank, voeten stevig op de grond.',
+            'Dumbbells voor de borst op kinhoogte, handpalmen naar je toe.',
+            'Druk omhoog en draai tegelijk de handpalmen naar voren.',
+            'Armen bijna gestrekt boven het hoofd, handpalmen naar voren.',
+            'Laat zakken en draai terug naar de startpositie.'],
+    tips: ['Rustige, vloeiende draaibeweging.', 'Onderrug niet hol trekken.', 'Lichter gewicht dan bij de gewone shoulder press.'] },
+  frontraise: { muscles: 'Voorkant schouders', name: 'Dumbbell Front Raise', equip: 'Dumbbells', type: 'weight',
+    steps: ['Sta rechtop, dumbbells voor de bovenbenen.',
+            'Bovenhandse grip, ellebogen licht gebogen.',
+            'Hef de armen recht naar voren omhoog.',
+            'Stop op schouderhoogte.',
+            'Laat gecontroleerd zakken naar de bovenbenen.'],
+    tips: ['Licht gewicht.', 'Niet zwaaien of achterover leunen.', 'Schouders laag houden.'] },
+  squeeze: { muscles: 'Binnenkant borst, triceps', name: 'Dumbbell Squeeze Press', equip: 'Dumbbells + bankje', type: 'weight',
+    steps: ['Lig plat op de bank, dumbbells op de borst, voeten stevig op de grond.',
+            'Neutrale grip (handpalmen naar elkaar), dumbbells tegen elkaar gedrukt.',
+            'Druk de dumbbells omhoog en blijf ze actief tegen elkaar knijpen.',
+            'Bovenste punt: armen gestrekt boven de borst, dumbbells nog steeds tegen elkaar.',
+            'Laat gecontroleerd zakken tot de dumbbells de borst bijna raken.'],
+    tips: ['Blijf de hele set tegen elkaar drukken.', 'Ellebogen dicht bij de romp.', 'Gebruik lichter gewicht dan bij de gewone press.'] },
+  floorpress: { muscles: 'Borst, triceps', name: 'Dumbbell Floor Press', equip: 'Dumbbells + yogamat', type: 'weight',
+    steps: ['Lig op je rug op de mat, knieën gebogen, voeten plat.',
+            'Dumbbells boven de borst, handpalmen naar voren of naar elkaar.',
+            'Laat de dumbbells zakken tot de bovenarmen de mat raken.',
+            'Laagste punt: bovenarmen op de mat, ellebogen ca. 45° van de romp.',
+            'Druk de dumbbells terug omhoog tot gestrekte armen.'],
+    tips: ['Laat de ellebogen kort rusten, niet stuiteren.', 'Schouderbladen samen.', 'Polsen recht boven de ellebogen.'] },
+  dbfly: { muscles: 'Borst', name: 'Dumbbell Fly', equip: 'Dumbbells + bankje', type: 'weight',
+    steps: ['Lig plat op de bank met de dumbbells boven de borst, voeten stevig op de grond.',
+            'Handpalmen naar elkaar, ellebogen licht gebogen, schouderbladen samen.',
+            'Open de armen in een wijde boog naar opzij.',
+            'Laagste punt: dumbbells ongeveer op borsthoogte, rek in de borst.',
+            'Breng de dumbbells in dezelfde boog terug boven de borst.'],
+    tips: ['Ellebogen blijven licht gebogen.', 'Niet verder zakken dan comfortabel.', 'Licht gewicht, gecontroleerd tempo.'] },
+  pushup: { muscles: 'Borst, triceps, voorkant schouders', name: 'Push-up', equip: 'Yogamat / lichaamsgewicht', type: 'bodyweight',
+    steps: ['Steun op handen en tenen, armen gestrekt.',
+            'Handen iets breder dan schouderbreedte, vingers naar voren.',
+            'Zak gecontroleerd omlaag door de ellebogen te buigen.',
+            'Laagste punt: borst net boven de mat.',
+            'Druk jezelf terug omhoog tot gestrekte armen.'],
+    tips: ['Lichaam in één rechte lijn.', 'Ellebogen ongeveer 45° van het lichaam.', 'Te zwaar? Steun op de knieën.'] },
+  bench: { muscles: 'Borst, triceps, voorkant schouders', name: 'Barbell Bench Press', equip: 'Barbell + bankje', type: 'weight',
+    steps: ['Lig plat op de bank, ogen onder de stang, voeten stevig op de grond.',
+            'Grip iets breder dan schouderbreedte, polsen recht, schouderbladen samen.',
+            'Laat de stang gecontroleerd zakken naar het midden van de borst.',
+            'Laagste punt: stang raakt licht de borst, ellebogen onder de stang.',
+            'Druk de stang krachtig terug omhoog tot gestrekte armen.'],
+    tips: ['Billen en schouders blijven op de bank.', 'Ellebogen ongeveer 45° van het lichaam.', 'Laat je partner spotten bij zware sets.'] },
+  goblet: { muscles: 'Bovenbenen, billen', name: 'Dumbbell Goblet Squat', equip: 'Dumbbell', type: 'weight',
+    steps: ['Sta met voeten iets breder dan heupbreedte, tenen licht naar buiten.',
+            'Houd één dumbbell verticaal tegen de borst, ellebogen omlaag.',
+            'Zak door knieën en heupen alsof je gaat zitten.',
+            'Bovenbenen ongeveer horizontaal, borst omhoog.',
+            'Duw via de hele voet terug omhoog tot stand.'],
+    tips: ['Knieën in lijn met de tenen.', 'Rug neutraal, borst omhoog.', 'Hielen blijven op de grond.'] },
+  bbrow: { muscles: 'Rug (lats, midden rug), biceps', name: 'Barbell Bent-Over Row', equip: 'Barbell', type: 'weight',
+    steps: ['Sta met de stang voor je, voeten op heupbreedte.',
+            'Bovenhandse grip op schouderbreedte, kantel vanuit de heupen naar ca. 45°.',
+            'Trek de stang naar je onderbuik.',
+            'Ellebogen achter het lichaam, schouderbladen samen.',
+            'Laat de stang gecontroleerd zakken tot gestrekte armen.'],
+    tips: ['Bovenlichaam stil houden, niet zwaaien.', 'Knieën licht gebogen.', 'Nek in het verlengde van de rug.'] },
+  dbpress: { muscles: 'Schouders, triceps', name: 'Seated Dumbbell Shoulder Press', equip: 'Dumbbells + bankje', type: 'weight',
+    steps: ['Zit rechtop op de bank, voeten stevig op de grond.',
+            'Dumbbells op schouderhoogte, handpalmen naar voren.',
+            'Druk de dumbbells omhoog boven het hoofd.',
+            'Armen bijna gestrekt, dumbbells boven de schouders.',
+            'Laat gecontroleerd zakken tot schouderhoogte.'],
+    tips: ['Onderrug niet hol trekken.', 'Buikspieren aanspannen.', 'Ellebogen niet op slot zetten.'] },
+  lateral: { muscles: 'Zijkant schouders', name: 'Dumbbell Lateral Raise', equip: 'Dumbbells', type: 'weight',
+    steps: ['Sta rechtop met een dumbbell in elke hand langs het lichaam.',
+            'Neutrale grip, ellebogen licht gebogen.',
+            'Hef de armen zijwaarts omhoog.',
+            'Stop op schouderhoogte.',
+            'Laat langzaam zakken naar de startpositie.'],
+    tips: ['Licht gewicht, strikte techniek.', 'Schouders laag houden.', 'Niet zwaaien met het bovenlichaam.'] },
+  ohtri: { muscles: 'Triceps', name: 'Dumbbell Overhead Triceps Extension', equip: 'Dumbbell + bankje', type: 'weight',
+    steps: ['Zit rechtop, dumbbell met gestrekte armen boven het hoofd.',
+            'Beide handen om het bovenste blad, ellebogen naar voren.',
+            'Buig de ellebogen en laat de dumbbell achter het hoofd zakken.',
+            'Laagste punt: ellebogen wijzen omhoog, rek in de triceps.',
+            'Strek de armen weer volledig boven het hoofd.'],
+    tips: ['Bovenarmen zo stil mogelijk.', 'Romp rechtop, buik aangespannen.', 'Rustig tempo omlaag.'] },
+  plank: { muscles: 'Core (buikspieren)', name: 'Plank', equip: 'Yogamat', type: 'bodyweight',
+    steps: ['Lig op de mat op onderarmen en tenen.',
+            'Ellebogen onder de schouders.',
+            'Span buik en billen aan en til het lichaam op.',
+            'Houd een rechte lijn van hoofd tot hielen.',
+            'Zak na de tijd gecontroleerd terug naar de mat.'],
+    tips: ['Heupen niet laten hangen of omhoog steken.', 'Rustig doorademen.', 'Reps = seconden vasthouden.'] },
+  rdl: { muscles: 'Hamstrings, billen, onderrug', name: 'Barbell Romanian Deadlift', equip: 'Barbell', type: 'weight',
+    steps: ['Sta rechtop met de stang voor de bovenbenen.',
+            'Bovenhandse grip op schouderbreedte, knieën licht gebogen.',
+            'Duw de heupen naar achteren, stang langs de benen omlaag.',
+            'Stop bij rek in de hamstrings, rug recht.',
+            'Duw de heupen naar voren en kom terug tot stand.'],
+    tips: ['Stang dicht bij het lichaam.', 'Rug neutraal, niet bol.', 'Beweging komt uit de heupen.'] },
+  dbrow: { muscles: 'Rug (lats), biceps', name: 'One-Arm Dumbbell Row', equip: 'Dumbbell + bankje', type: 'weight',
+    steps: ['Eén knie en hand op de bank, andere voet op de grond.',
+            'Dumbbell met neutrale grip, arm gestrekt.',
+            'Trek de dumbbell richting je heup.',
+            'Elleboog langs de romp, schouderblad naar achteren.',
+            'Laat gecontroleerd zakken; wissel na de set van kant.'],
+    tips: ['Rug vlak, romp niet draaien.', 'Trek met de rug, niet alleen met de arm.', 'Reps zijn per arm.'] },
+  dbbench: { muscles: 'Borst, triceps, voorkant schouders', name: 'Dumbbell Bench Press', equip: 'Dumbbells + bankje', type: 'weight',
+    steps: ['Ga liggen met de dumbbells op de bovenbenen en kantel achterover.',
+            'Dumbbells boven de borst, handpalmen naar voren, schouderbladen samen.',
+            'Laat de dumbbells gecontroleerd zakken naast de borst.',
+            'Laagste punt: dumbbells naast de borst, lichte rek in de borst.',
+            'Druk terug omhoog tot gestrekte armen boven de borst.'],
+    tips: ['Voeten stevig op de grond.', 'Ellebogen ongeveer 45°.', 'Gecontroleerd tempo omlaag.'] },
+  revfly: { muscles: 'Achterkant schouders, bovenrug', name: 'Dumbbell Reverse Fly', equip: 'Dumbbells', type: 'weight',
+    steps: ['Buig voorover vanuit de heupen, rug recht.',
+            'Dumbbells onder de borst, handpalmen naar elkaar, ellebogen licht gebogen.',
+            'Hef de armen zijwaarts omhoog.',
+            'Stop op schouderhoogte, schouderbladen samen.',
+            'Laat gecontroleerd zakken.'],
+    tips: ['Licht gewicht.', 'Niet zwaaien.', 'Nek neutraal houden.'] },
+  lunge: { muscles: 'Bovenbenen, billen', name: 'Dumbbell Reverse Lunge', equip: 'Dumbbells', type: 'weight',
+    steps: ['Sta rechtop met een dumbbell in elke hand.',
+            'Armen langs het lichaam, neutrale grip.',
+            'Stap met één been naar achteren en zak door beide knieën.',
+            'Achterste knie net boven de grond, voorste knie boven de enkel.',
+            'Duw via de voorste voet terug; wissel van been.'],
+    tips: ['Bovenlichaam rechtop.', 'Reps zijn per been.', 'Knie in lijn met de tenen.'] },
+  bbcurl: { muscles: 'Biceps', name: 'Barbell Biceps Curl', equip: 'Barbell', type: 'weight',
+    steps: ['Sta rechtop met de stang tegen de bovenbenen.',
+            'Onderhandse grip op schouderbreedte.',
+            'Buig de ellebogen en krul de stang omhoog.',
+            'Stang op borsthoogte, ellebogen langs het lichaam.',
+            'Laat de stang langzaam zakken tot gestrekte armen.'],
+    tips: ['Ellebogen stil houden.', 'Niet zwaaien met de rug.', 'Langzaam laten zakken.'] },
+  deadbug: { muscles: 'Core (diepe buikspieren)', name: 'Dead Bug', equip: 'Yogamat', type: 'bodyweight',
+    steps: ['Lig op je rug op de mat.',
+            'Armen recht omhoog, knieën 90° boven de heupen.',
+            'Strek tegelijk één arm naar achteren en het andere been naar voren.',
+            'Arm en been net boven de grond, onderrug op de mat.',
+            'Terug naar het midden en wissel van kant.'],
+    tips: ['Onderrug tegen de mat.', 'Langzaam en gecontroleerd.', 'Reps zijn per kant.'] },
+  ohp: { muscles: 'Schouders, triceps', name: 'Barbell Overhead Press', equip: 'Barbell', type: 'weight',
+    steps: ['Sta rechtop met de stang op schouderhoogte voor de borst.',
+            'Grip net buiten schouderbreedte, ellebogen iets voor de stang.',
+            'Druk de stang recht omhoog, hoofd iets naar achteren.',
+            'Armen gestrekt boven het hoofd, hoofd weer onder de stang.',
+            'Laat gecontroleerd zakken naar schouderhoogte.'],
+    tips: ['Billen en buik aanspannen.', 'Niet achterover hangen.', 'Stang in een rechte lijn bewegen.'] },
+  uhrow: { muscles: 'Rug (lats), biceps', name: 'Underhand Barbell Row', equip: 'Barbell', type: 'weight',
+    steps: ['Sta met de stang voor je, voeten op heupbreedte.',
+            'Onderhandse grip op schouderbreedte, kantel naar ca. 45°.',
+            'Trek de stang naar je navel.',
+            'Ellebogen langs het lichaam naar achteren, schouderbladen samen.',
+            'Laat gecontroleerd zakken.'],
+    tips: ['Rug recht houden.', 'Niet omhoog komen tijdens het trekken.', 'Knieën licht gebogen.'] },
+  cgbench: { muscles: 'Triceps, borst', name: 'Close-Grip Bench Press', equip: 'Barbell + bankje', type: 'weight',
+    steps: ['Lig plat op de bank, ogen onder de stang.',
+            'Grip op schouderbreedte (smaller dan normaal).',
+            'Laat de stang zakken naar de onderkant van de borst.',
+            'Laagste punt: stang net boven de onderborst, ellebogen langs de romp.',
+            'Druk terug omhoog tot gestrekte armen.'],
+    tips: ['Niet té smal pakken; polsen recht.', 'Ellebogen langs het lichaam.', 'Spotter bij zware sets.'] },
+  bss: { muscles: 'Bovenbenen, billen', name: 'Bulgarian Split Squat', equip: 'Dumbbells + bankje', type: 'weight',
+    steps: ['Sta een grote stap voor de bank, dumbbells in de handen.',
+            'Leg de wreef van je achterste voet op de bank.',
+            'Zak recht omlaag door de voorste knie te buigen.',
+            'Voorste bovenbeen ongeveer horizontaal.',
+            'Duw via de voorste voet omhoog; wissel na de set.'],
+    tips: ['Eerst zonder gewicht voor balans.', 'Reps zijn per been.', 'Voorste knie in lijn met de tenen.'] },
+  pullover: { muscles: 'Borst, rug (lats)', name: 'Dumbbell Pullover', equip: 'Dumbbell + bankje', type: 'weight',
+    steps: ['Lig op de bank, voeten stevig op de grond.',
+            'Houd één dumbbell met beide handen boven de borst.',
+            'Laat de dumbbell met licht gebogen armen in een boog achter het hoofd zakken.',
+            'Stop wanneer de armen ongeveer in lijn met het lichaam zijn.',
+            'Breng de dumbbell in dezelfde boog terug boven de borst.'],
+    tips: ['Ellebogen licht gebogen houden.', 'Niet verder zakken dan comfortabel.', 'Rustig tempo.'] },
+  hammer: { muscles: 'Biceps, onderarmen', name: 'Dumbbell Hammer Curl', equip: 'Dumbbells', type: 'weight',
+    steps: ['Sta rechtop, dumbbells langs het lichaam.',
+            'Neutrale grip, duimen naar voren.',
+            'Buig de ellebogen en breng de dumbbells omhoog.',
+            'Dumbbells op schouderhoogte, ellebogen stil.',
+            'Laat langzaam zakken.'],
+    tips: ['Ellebogen langs de romp.', 'Niet zwaaien.', 'Volledige bewegingsuitslag.'] },
+  twist: { muscles: 'Core (schuine buikspieren)', name: 'Russian Twist', equip: 'Yogamat (+ optioneel dumbbell)', type: 'bodyweight',
+    steps: ['Zit op de mat met gebogen knieën.',
+            'Dumbbell met beide handen voor de borst, leun licht achterover.',
+            'Draai de romp naar één kant.',
+            'Dumbbell naast de heup.',
+            'Draai via het midden naar de andere kant.'],
+    tips: ['Rug recht, niet bol.', 'Draai vanuit de romp.', 'Reps zijn per kant.'] }
+};
+
+/* =========================================================
+   DATA: WORKOUTS
+   ========================================================= */
+const WORKOUTS = {
+  A: { id: 'A', name: 'Workout A', focus: 'Full Body • Push focus', duration: 45, exercises: [
+    { ex: 'bench',   sets: 4, reps: '6-8',        rest: 120 },
+    { ex: 'dbfly',   sets: 3, reps: '10-12',      rest: 75 },
+    { ex: 'bbrow',   sets: 4, reps: '8-10',       rest: 90 },
+    { ex: 'dbpress', sets: 3, reps: '8-10',       rest: 90 },
+    { ex: 'lateral', sets: 3, reps: '12-15',      rest: 60 },
+      { ex: 'ohtri',   sets: 3, reps: '10-12',      rest: 60 },
+      { ex: 'altcurl', sets: 3, reps: '10 per arm', rest: 60 },
+    { ex: 'plank',   sets: 3, reps: '30-45 sec',  rest: 45 }
+  ]},
+  B: { id: 'B', name: 'Workout B', focus: 'Full Body • Pull focus', duration: 45, exercises: [
+    { ex: 'rdl',     sets: 3, reps: '8-10',          rest: 120 },
+    { ex: 'dbrow',   sets: 4, reps: '8-10 per arm',  rest: 90, work: 60 },
+    { ex: 'dbbench', sets: 3, reps: '8-12',          rest: 90 },
+      { ex: 'squeeze', sets: 3, reps: '10-12',         rest: 60 },
+      { ex: 'arnold',  sets: 3, reps: '8-10',          rest: 75 },
+    { ex: 'revfly',  sets: 3, reps: '12-15',         rest: 60 },
+    { ex: 'bbcurl',  sets: 3, reps: '8-12',          rest: 60 },
+    { ex: 'deadbug', sets: 3, reps: '10 per kant',   rest: 45 }
+  ]},
+  C: { id: 'C', name: 'Workout C', focus: 'Full Body • Upper focus', duration: 45, exercises: [
+    { ex: 'ohp',      sets: 4, reps: '6-8',          rest: 120 },
+    { ex: 'uhrow',    sets: 4, reps: '8-10',         rest: 90 },
+    { ex: 'cgbench',  sets: 3, reps: '8-10',         rest: 90 },
+    { ex: 'floorpress', sets: 3, reps: '8-12',       rest: 75 },
+      { ex: 'pullover', sets: 3, reps: '10-12',        rest: 60 },
+      { ex: 'frontraise', sets: 3, reps: '10-12',      rest: 60 },
+    { ex: 'hammer',   sets: 3, reps: '10-12',        rest: 60 },
+    { ex: 'twist',    sets: 3, reps: '12 per kant',  rest: 45 }
+  ]}
+};
+
+/* =========================================================
+   STATE & OPSLAG (localStorage)
+   ========================================================= */
+const STORAGE_KEY = 'fitTogether.v1';
+const PEOPLE = ['p1', 'p2'];
+const DEFAULT_STATE = {
+  users: { p1: { name: 'Lars' }, p2: { name: 'Fleur' } },
+  settings: { step: 2.5, autoTimer: true, sound: true },
+  history: [],          // afgeronde trainingen
+  lastWeights: {},      // { exId: { p1: 65, p2: 35 } }
+  activeSession: null   // lopende training
+};
+
+const clone = o => JSON.parse(JSON.stringify(o));
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return clone(DEFAULT_STATE);
+    const s = JSON.parse(raw);
+    const d = clone(DEFAULT_STATE);
+    const out = {
+      users: { p1: { ...d.users.p1, ...((s.users || {}).p1 || {}) }, p2: { ...d.users.p2, ...((s.users || {}).p2 || {}) } },
+      settings: { ...d.settings, ...(s.settings || {}) },
+      history: Array.isArray(s.history) ? s.history : [],
+      lastWeights: s.lastWeights || {},
+      activeSession: s.activeSession || null
+    };
+    if (out.users.p2.name === 'Partner') out.users.p2.name = 'Fleur';
+    return out;
+  } catch (e) { return clone(DEFAULT_STATE); }
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch (e) { toast('Opslaan mislukt'); }
+}
+let state = loadState();
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pname = p => (state.users[p] && state.users[p].name ? state.users[p].name : (p === 'p1' ? 'Persoon 1' : 'Persoon 2'));
+function parseKg(v) {
+  if (v === null || v === undefined) return null;
+  const s = String(v).trim().replace(/\s/g, '').replace(',', '.').replace(/[^0-9.]/g, '');
+  if (s === '') return null;
+  const n = parseFloat(s);
+  return isFinite(n) && n >= 0 ? Math.round(n * 100) / 100 : null;
+}
+const numNL = n => Number(n).toLocaleString('nl-NL', { maximumFractionDigits: 2 });
+const fmtKg = n => (n === null || n === undefined) ? '—' : numNL(n) + ' kg';
+const fmtLong = iso => new Date(iso).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+const fmtShort = iso => new Date(iso).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' }).replace('.', '');
+const fmtTime = sec => { const m = Math.floor(sec / 60), s = sec % 60; return m + ':' + String(s).padStart(2, '0'); };
+const totalSets = s => s.exercises.reduce((a, e) => a + e.sets, 0);
+const doneSets = s => s.exercises.reduce((a, e) => a + e.completed.filter(Boolean).length, 0);
+const exDone = e => e.completed.every(Boolean);
+
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 1800);
+}
+function sortedHistory(asc) {
+  return state.history.slice().sort((a, b) => asc ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date));
+}
+/* Gewichten per set: altijd als array met lengte = aantal sets */
+const RATINGS = { light: { label: 'Te licht', ic: '⬆', cls: 'r-light' }, good: { label: 'Goed gewicht', ic: '✓', cls: 'r-good' }, heavy: { label: 'Te zwaar', ic: '⬇', cls: 'r-heavy' } };
+const isNum = v => v !== null && v !== undefined && v !== '' && isFinite(v);
+function toArr(v, n) {
+  let a;
+  if (Array.isArray(v)) a = v.slice(0, n);
+  else a = isNum(v) ? Array(n).fill(Number(v)) : [];
+  while (a.length < n) a.push(a.length && isNum(a[a.length - 1]) && !Array.isArray(v) ? a[a.length - 1] : null);
+  return a.map(x => isNum(x) ? Number(x) : null);
+}
+const wArr = (e, p) => toArr(e.weights ? e.weights[p] : null, e.sets);
+const hasW = arr => arr.some(isNum);
+const maxW = arr => { const v = arr.filter(isNum); return v.length ? Math.max(...v) : null; };
+function fmtSets(arr) {
+  if (!arr || !hasW(arr)) return '—';
+  return arr.map(v => isNum(v) ? numNL(v) : '–').join(' · ') + ' kg';
+}
+/* Laatste opgeslagen training met deze oefening */
+function prevEntry(exId) {
+  for (const s of sortedHistory(false)) {
+    const e = s.exercises.find(x => x.exId === exId);
+    if (e) return { date: s.date, e };
+  }
+  return null;
+}
+/* Gewichten per set van de vorige training (voor één persoon) */
+function prevSets(exId, p) {
+  for (const s of sortedHistory(false)) {
+    const e = s.exercises.find(x => x.exId === exId);
+    if (e && hasW(wArr(e, p))) return { date: s.date, arr: wArr(e, p) };
+  }
+  return null;
+}
+function prevNote(exId, p) {
+  const pe = prevEntry(exId);
+  if (!pe || !pe.e.notes || !pe.e.notes[p]) return null;
+  const n = pe.e.notes[p];
+  return (n.rating || (n.text && n.text.trim())) ? { date: pe.date, ...n } : null;
+}
+/* Invullen bij start: vorige training per set, anders laatst gebruikt */
+function prefill(exId, p, n) {
+  const ps = prevSets(exId, p);
+  let src = ps ? ps.arr : (state.lastWeights[exId] ? state.lastWeights[exId][p] : null);
+  if (src === null || src === undefined) return Array(n).fill(null);
+  const a = Array.isArray(src) ? src.slice() : [src];
+  const out = [];
+  for (let k = 0; k < n; k++) {
+    let v = k < a.length ? a[k] : null;
+    if (!isNum(v)) { for (let j = Math.min(k, a.length - 1); j >= 0; j--) if (isNum(a[j])) { v = a[j]; break; } }
+    out.push(isNum(v) ? Number(v) : null);
+  }
+  return out;
+}
+function normalizeSession(s) {
+  if (!s || !s.exercises) return s;
+  s.exercises.forEach(e => {
+    e.weights = { p1: wArr(e, 'p1'), p2: wArr(e, 'p2') };
+    if (!e.notes) e.notes = { p1: { rating: null, text: '' }, p2: { rating: null, text: '' } };
+    PEOPLE.forEach(p => { if (!e.notes[p]) e.notes[p] = { rating: null, text: '' }; });
+  });
+  return s;
+}
+  if (state.activeSession) normalizeSession(state.activeSession);
+/* Oefening opzoeken; valt terug op opgeslagen gegevens als hij uit het schema is gehaald */
+function exInfo(exId, fallbackName) {
+  if (EXERCISES[exId]) return EXERCISES[exId];
+  let name = fallbackName;
+  if (!name) for (const s of state.history) { const e = s.exercises.find(x => x.exId === exId); if (e) { name = e.name; break; } }
+  return { name: name || exId, muscles: '', equip: '', type: 'weight', steps: [], tips: [], removed: true };
+}
+function remainingSec(s) {
+  let t = 0;
+  s.exercises.forEach(e => {
+    const left = e.completed.filter(c => !c).length;
+    const w = WORKOUTS[s.workoutId] ? WORKOUTS[s.workoutId].exercises.find(x => x.ex === e.exId) : null;
+    const work = (w && w.work) || 45;
+    t += left * (work + e.rest);
+    if (left > 0) t += 30;
+  });
+  return t;
+}
+
+/* =========================================================
+   ROUTER
+   ========================================================= */
+let view = 'home', routeArg = null, lastView = null;
+function go(path) {
+  if (location.hash === '#/' + path) route();
+  else location.hash = '#/' + path;
+}
+function route() {
+  const h = location.hash.replace(/^#\/?/, '') || 'home';
+  const parts = h.split('/');
+  view = parts[0]; routeArg = parts[1] || null;
+  render();
+}
+window.addEventListener('hashchange', route);
+
+function render() {
+  const app = $('#app');
+  switch (view) {
+    case 'train': app.innerHTML = renderTrain(); break;
+    case 'history': app.innerHTML = routeArg ? renderHistoryDetail(routeArg) : renderHistory(); break;
+    case 'progress': app.innerHTML = renderProgress(); break;
+    case 'settings': app.innerHTML = renderSettings(); break;
+    default: view = 'home'; app.innerHTML = renderHome();
+  }
+  const key = view + '/' + (routeArg || '');
+  if (key !== lastView) window.scrollTo(0, 0);
+  lastView = key;
+  keepAwake(view === 'train' && !!state.activeSession);
+  updatePill();
+}
+
+/* =========================================================
+   HOME
+   ========================================================= */
+function renderHome() {
+  const s = state.activeSession;
+  const hist = sortedHistory(false);
+  const order = ['A', 'B', 'C'];
+  const nextId = hist.length ? order[(order.indexOf(hist[0].workoutId) + 1) % 3] : 'A';
+  let resume = '';
+  if (s) {
+    resume = `<button class="resume" data-action="resume">
+      <div><div class="eyebrow">Lopende training</div>
+      <div class="resume-title">${esc(s.workoutName)} · oefening ${s.current + 1} van ${s.exercises.length}</div>
+      <div class="muted" style="font-size:14px">${doneSets(s)} van ${totalSets(s)} sets voltooid</div></div>
+      <span class="resume-go">Hervat →</span></button>`;
+  }
+  const cards = order.map(id => {
+    const w = WORKOUTS[id];
+    const last = hist.find(h => h.workoutId === id);
+    return `<button class="wcard ${id === nextId && !s ? 'next' : ''}" data-action="start" data-id="${id}">
+      <div class="wletter">${id}</div>
+      <div class="wbody">
+        <div class="wname">${w.name.toUpperCase()} ${id === nextId && !s ? '<span class="badge">VOLGENDE</span>' : ''}</div>
+        <div class="wfocus">${w.focus}</div>
+        <div class="wmeta">± ${Math.round(remainingSec(createSession(id)) / 5 / 60) * 5} min · ${w.exercises.length} oefeningen${last ? ' · laatst ' + fmtShort(last.date) : ''}</div>
+      </div><div class="warrow">›</div></button>`;
+  }).join('');
+  return `
+    <header class="hero">
+      <div class="logo">FIT <span>TOGETHER</span></div>
+      <div class="couple">${esc(pname('p1'))} &amp; ${esc(pname('p2'))}</div>
+    </header>
+    ${resume}
+    <div class="wcards">${cards}</div>
+    <nav class="menu">
+      <button class="btn secondary" data-action="nav" data-to="history"><span class="ic">🗓️</span>Trainingshistorie<span class="chev">›</span></button>
+      <button class="btn secondary" data-action="nav" data-to="progress"><span class="ic">📈</span>Progressie<span class="chev">›</span></button>
+      <button class="btn secondary" data-action="nav" data-to="settings"><span class="ic">⚙️</span>Instellingen<span class="chev">›</span></button>
+    </nav>`;
+}
+
+/* =========================================================
+   TRAINING
+   ========================================================= */
+function createSession(id) {
+  const w = WORKOUTS[id];
+  return {
+    id: 's' + Date.now(),
+    workoutId: id,
+    workoutName: w.name,
+    date: new Date().toISOString(),
+    startedAt: Date.now(),
+    current: 0,
+    exercises: w.exercises.map(e => ({
+      exId: e.ex,
+      name: EXERCISES[e.ex].name,
+      sets: e.sets,
+      reps: e.reps,
+      rest: e.rest,
+      weights: { p1: prefill(e.ex, 'p1', e.sets), p2: prefill(e.ex, 'p2', e.sets) },
+      notes: { p1: { rating: null, text: '' }, p2: { rating: null, text: '' } },
+      completed: Array(e.sets).fill(false)
+    }))
+  };
+}
+function startWorkout(id) {
+  const s = state.activeSession;
+  if (s) {
+    if (s.workoutId === id) { go('train'); return; }
+    showSheet('Lopende training', `Je hebt nog een lopende ${esc(s.workoutName)}. Wat wil je doen?`, [
+      { label: 'Hervat ' + s.workoutName, cls: 'primary', fn: () => go('train') },
+      { label: 'Opslaan & start ' + WORKOUTS[id].name, cls: 'secondary', fn: () => { finishSession(false); beginNew(id); } },
+      { label: 'Verwijderen & start ' + WORKOUTS[id].name, cls: 'danger', fn: () => { state.activeSession = null; beginNew(id); } },
+      { label: 'Annuleren', cls: 'text', fn: () => {} }
+    ]);
+    return;
+  }
+  beginNew(id);
+}
+function beginNew(id) {
+  state.activeSession = createSession(id);
+  saveState();
+  go('train');
+}
+
+function renderTrain() {
+  const s = state.activeSession;
+  if (!s) { setTimeout(() => go('home'), 0); return ''; }
+  if (!s.exercises.length) { state.activeSession = null; saveState(); setTimeout(() => go('home'), 0); return ''; }
+  if (!(s.current >= 0 && s.current < s.exercises.length)) s.current = 0;
+  const i = s.current, e = s.exercises[i], ex = exInfo(e.exId, e.name);
+  const pct = Math.round(doneSets(s) / totalSets(s) * 100);
+  const rem = Math.max(1, Math.round(remainingSec(s) / 60));
+  const isLast = i === s.exercises.length - 1;
+  const done = exDone(e);
+  const bw = ex.type === 'bodyweight';
+
+  const dots = s.exercises.map((x, k) =>
+    `<button class="dot ${k === i ? 'cur' : ''} ${exDone(x) ? 'done' : ''}" data-action="jump" data-i="${k}" aria-label="Oefening ${k + 1}">${k + 1}</button>`).join('');
+
+  const prevBlocks = PEOPLE.map(p => {
+    const ps = prevSets(e.exId, p), pn = prevNote(e.exId, p);
+    const r = pn && pn.rating ? RATINGS[pn.rating] : null;
+    return `<div class="prev ${p}">
+      <div class="prev-h"><span class="pn">${esc(pname(p))}</span><span class="pd">${ps ? 'vorige keer · ' + fmtShort(ps.date) : 'nog geen vorige training'}</span></div>
+      <div class="pw">${ps ? fmtSets(ps.arr) : '—'}</div>
+      ${pn ? `<div class="pnote">${r ? `<span class="rbadge ${r.cls}">${r.ic} ${r.label}</span>` : ''}${pn.text ? `<span class="ptext">“${esc(pn.text)}”</span>` : ''}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  const prevArr = { p1: (prevSets(e.exId, 'p1') || {}).arr || [], p2: (prevSets(e.exId, 'p2') || {}).arr || [] };
+  const rows = e.completed.map((c, k) => {
+    const cells = PEOPLE.map(p => {
+      const v = e.weights[p][k];
+      const pv = prevArr[p][k];
+      return `<div class="wc ${p}">
+        <button data-action="dec" data-p="${p}" data-k="${k}" aria-label="Minder">−</button>
+        <input type="text" inputmode="decimal" autocomplete="off" data-input="weight" data-p="${p}" data-k="${k}" value="${isNum(v) ? numNL(v) : ''}" placeholder="0">
+        <button data-action="inc" data-p="${p}" data-k="${k}" aria-label="Meer">+</button>
+        <div class="pv">${isNum(pv) ? 'vorige: ' + numNL(pv) : '&nbsp;'}</div>
+      </div>`;
+    }).join('');
+    return `<div class="srow ${c ? 'done' : ''}">
+      <div class="sl">Set<b>${k + 1}</b></div>${cells}
+      <button class="ckbtn" data-action="set" data-k="${k}" aria-label="Set ${k + 1} voltooid">${c ? '✓' : ''}</button>
+    </div>`;
+  }).join('');
+
+  const notes = PEOPLE.map(p => {
+    const n = e.notes[p];
+    return `<div class="note ${p}">
+      <div class="pn">${esc(pname(p))}</div>
+      <div class="rchips">${Object.keys(RATINGS).map(r => `<button class="rchip ${RATINGS[r].cls} ${n.rating === r ? 'on' : ''}" data-action="rate" data-p="${p}" data-r="${r}">${RATINGS[r].label}</button>`).join('')}</div>
+      <input class="ninput" type="text" data-input="note" data-p="${p}" value="${esc(n.text || '')}" placeholder="Opmerking voor volgende keer…" maxlength="120" autocomplete="off">
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="tbar">
+      <button class="iconbtn" data-action="nav" data-to="home" aria-label="Naar start">⌂</button>
+      <div class="tbar-mid">
+        <div class="tw">${esc(s.workoutName.toUpperCase())}</div>
+        <div class="tsub">Oefening <b>${i + 1}</b> van <b>${s.exercises.length}</b> · ± <b>${rem} min</b> resterend</div>
+      </div>
+      <button class="iconbtn" data-action="stop" aria-label="Training stoppen">✕</button>
+    </div>
+    <div class="pbar"><div style="width:${pct}%"></div></div>
+    <div class="dots">${dots}</div>
+
+    <div class="card">
+      <h1 class="exname">${esc(ex.name)}</h1>
+      ${ex.muscles ? `<div class="focus">🎯 Focus: <b>${esc(ex.muscles)}</b></div>` : ''}
+      <div class="chips">
+        <span class="chip">${e.sets} sets</span>
+        <span class="chip">${esc(e.reps)} reps</span>
+        <span class="chip acc">${e.rest} sec rust</span>
+      </div>
+${ex.removed ? '<div class="focus">Deze oefening staat niet meer in het schema.</div>' : `<button class="btn full howto" data-action="howto" data-ex="${e.exId}">▶ Bekijk uitvoering</button>`}
+    </div>
+
+    <div class="prevs">${prevBlocks}</div>
+
+    <div class="section-t"><span class="eyebrow">Sets · gewicht in kg${bw ? ' (extra gewicht optioneel)' : ''}</span><span class="muted" style="font-size:14px;font-weight:700">${e.completed.filter(Boolean).length}/${e.sets}</span></div>
+    <div class="shead"><span></span><span class="p1">${esc(pname('p1'))}</span><span class="p2">${esc(pname('p2'))}</span><span>✓</span></div>
+    <div class="srows">${rows}</div>
+    ${done ? `<div class="alldone">✓ Alle sets voltooid${isLast ? ' — rond de training af' : ' — door naar de volgende oefening'}</div>` : ''}
+
+
+    <button class="btn secondary full restbtn" data-action="rest">⏱ START RUSTTIMER · ${e.rest} sec</button>
+
+    <div class="section-t"><span class="eyebrow">Opmerking voor volgende training</span></div>
+    <div class="notes">${notes}</div>
+
+    <div class="footer"><div class="footer-in">
+      <button class="btn secondary" data-action="prev" ${i === 0 ? 'disabled' : ''}>← VORIGE</button>
+      ${isLast
+        ? `<button class="btn primary ${done ? 'pulse' : ''}" data-action="finish">AFRONDEN ✓</button>`
+        : `<button class="btn primary ${done ? 'pulse' : ''}" data-action="next">VOLGENDE →</button>`}
+    </div></div>`;
+}
+
+function setWeight(p, k, value) {
+  const s = state.activeSession; if (!s) return;
+  const e = s.exercises[s.current];
+  e.weights[p][k] = value;
+  if (!state.lastWeights[e.exId]) state.lastWeights[e.exId] = {};
+  state.lastWeights[e.exId][p] = e.weights[p].slice();
+  saveState();
+}
+/* Na invoer: lege, nog niet afgevinkte volgende sets automatisch meevullen */
+function fillForward(p, k, old) {
+  const s = state.activeSession; if (!s) return;
+  const e = s.exercises[s.current];
+  const v = e.weights[p][k]; if (!isNum(v)) return;
+  for (let j = k + 1; j < e.sets; j++) {
+    const w = e.weights[p][j];
+    if (!e.completed[j] && (!isNum(w) || (isNum(old) && w === old))) {
+      e.weights[p][j] = v;
+      const inp = document.querySelector(`input[data-input="weight"][data-p="${p}"][data-k="${j}"]`);
+      if (inp) inp.value = numNL(v);
+    }
+  }
+  setWeight(p, k, v);
+}
+function stepWeight(p, k, dir) {
+  const s = state.activeSession; if (!s) return;
+  const e = s.exercises[s.current];
+  const step = Number(state.settings.step) || 2.5;
+  let v = e.weights[p][k];
+  const old = v;
+  if (!isNum(v)) { const ps = prevSets(e.exId, p); v = (ps && isNum(ps.arr[k])) ? ps.arr[k] : 0; }
+  v = Math.max(0, Math.round((v + dir * step) * 100) / 100);
+  setWeight(p, k, v);
+  const inp = document.querySelector(`input[data-input="weight"][data-p="${p}"][data-k="${k}"]`);
+  if (inp) inp.value = numNL(v);
+  fillForward(p, k, old);
+}
+function setRating(p, r) {
+  const s = state.activeSession; if (!s) return;
+  const n = s.exercises[s.current].notes[p];
+  n.rating = n.rating === r ? null : r;
+  saveState(); render();
+}
+function toggleSet(k) {
+  const s = state.activeSession; if (!s) return;
+  const e = s.exercises[s.current];
+  e.completed[k] = !e.completed[k];
+  saveState();
+  render();
+  if (e.completed[k] && state.settings.autoTimer) startTimer(e.rest, e.name);
+}
+function finishSession(navigate) {
+  const s = state.activeSession; if (!s) return;
+  const entry = clone(s);
+  entry.finishedAt = Date.now();
+  entry.durationMin = Math.max(1, Math.round((entry.finishedAt - entry.startedAt) / 60000));
+  entry.status = doneSets(s) === totalSets(s) ? 'completed' : 'partial';
+  delete entry.current;
+  entry.exercises.forEach(e => {
+    PEOPLE.forEach(p => {
+      if (hasW(wArr(e, p))) {
+        if (!state.lastWeights[e.exId]) state.lastWeights[e.exId] = {};
+        state.lastWeights[e.exId][p] = wArr(e, p);
+      }
+    });
+  });
+  state.history.push(entry);
+  state.activeSession = null;
+  saveState();
+  closeTimer();
+  if (navigate !== false) { toast('Training opgeslagen 💪'); go('history/' + entry.id); }
+}
+function askFinish() {
+  const s = state.activeSession; if (!s) return;
+  const d = doneSets(s), t = totalSets(s);
+  showSheet('Training afronden?', `${d} van ${t} sets voltooid. De training wordt opgeslagen in de historie.`, [
+    { label: 'Opslaan & afronden', cls: 'primary', fn: () => finishSession() },
+    { label: 'Verder trainen', cls: 'text', fn: () => {} }
+  ]);
+}
+function askStop() {
+  const s = state.activeSession; if (!s) return;
+  showSheet('Training stoppen?', `${doneSets(s)} van ${totalSets(s)} sets voltooid.`, [
+    { label: 'Opslaan in historie', cls: 'primary', fn: () => finishSession() },
+    { label: 'Verwijderen zonder opslaan', cls: 'danger', fn: () => { state.activeSession = null; saveState(); closeTimer(); toast('Training verwijderd'); go('home'); } },
+    { label: 'Annuleren', cls: 'text', fn: () => {} }
+  ]);
+}
+
+
+/* =========================================================
+   ILLUSTRATIES (inline SVG, stick figures)
+   Pose A = startpositie, pose B = keerpunt. B erft van A.
+   ========================================================= */
+const LYING = { s: [34, 61], hp: [62, 61], k: [78, 55], a: [84, 90] };
+const STAND = { s: [60, 23], e: [61, 38], w: [62, 52], hp: [60, 54], k: [61, 72], a: [60, 90] };
+const SEAT = { s: [58, 34], hp: [58, 62], k: [76, 62], a: [76, 90] };
+const HINGE = { s: [72, 34], hp: [50, 52], k: [56, 70], a: [52, 90], e: [72, 49], w: [72, 64] };
+const POSES = {
+  altcurl: { eq: { db: 1 }, A: { ...STAND, w: [63, 53] }, B: { w: [72, 26] } },
+  arnold:  { eq: { bench: [42, 76, 64], db: 1 }, A: { ...SEAT, e: [64, 50], w: [66, 36] }, B: { e: [60, 18], w: [60, 5] } },
+  frontraise: { eq: { db: 1 }, A: { ...STAND, e: [63, 38], w: [66, 52] }, B: { e: [74, 25], w: [88, 23] } },
+  dbfly:   { eq: { bench: [16, 74, 66], db: 1 },  A: { ...LYING, e: [34, 46], w: [34, 32] }, B: { e: [42, 64], w: [48, 75] } },
+  pushup:  { eq: { mat: 1 },
+    A: { s: [36, 62], hp: [64, 73], e: [36, 76], w: [36, 89], k: [80, 81], a: [96, 88] },
+    B: { s: [36, 80], hp: [64, 84], e: [48, 78], w: [36, 89], k: [80, 86], a: [96, 88] } },
+  squeeze: { eq: { bench: [16, 74, 66], db: 1 },  A: { ...LYING, e: [42, 64], w: [36, 54] }, B: { e: [35, 47], w: [34, 33] } },
+  floorpress: { eq: { mat: 1, db: 1 },
+    A: { s: [34, 86], hp: [62, 86], k: [78, 70], a: [92, 88], e: [34, 72], w: [34, 58] },
+    B: { e: [44, 88], w: [38, 72] } },
+  bench:   { eq: { bench: [16, 74, 66], bar: 1 }, A: { ...LYING, e: [34, 46], w: [34, 32] }, B: { e: [45, 72], w: [37, 52] } },
+  dbbench: { eq: { bench: [16, 74, 66], db: 1 },  A: { ...LYING, e: [34, 46], w: [34, 32] }, B: { e: [46, 72], w: [40, 56] } },
+  cgbench: { eq: { bench: [16, 74, 66], bar: 1 }, A: { ...LYING, e: [36, 46], w: [36, 32] }, B: { e: [50, 70], w: [41, 52] } },
+  pullover:{ eq: { bench: [16, 74, 66], db: 1 },  A: { ...LYING, e: [36, 48], w: [38, 36] }, B: { e: [22, 54], w: [10, 50] } },
+  goblet:  { eq: { db: 1 }, A: { ...STAND, e: [63, 40], w: [67, 30] }, B: { s: [55, 37], hp: [44, 64], k: [65, 62], a: [62, 90], e: [60, 54], w: [64, 44] } },
+  bbrow:   { eq: { bar: 1 }, A: { ...HINGE }, B: { e: [54, 38], w: [62, 52] } },
+  uhrow:   { eq: { bar: 1 }, A: { ...HINGE }, B: { e: [52, 40], w: [60, 54] } },
+  rdl:     { eq: { bar: 1 }, A: { ...STAND, w: [63, 54], e: [61, 39] }, B: { ...HINGE, e: [73, 50], w: [73, 66] } },
+  revfly:  { eq: { db: 1 }, A: { ...HINGE, e: [72, 46], w: [72, 60] }, B: { e: [66, 30], w: [64, 18] } },
+  dbpress: { eq: { bench: [42, 76, 64], db: 1 }, A: { ...SEAT, e: [62, 47], w: [64, 33] }, B: { e: [60, 18], w: [60, 5] } },
+  ohtri:   { eq: { bench: [42, 76, 64], db: 1 }, A: { ...SEAT, e: [62, 20], w: [61, 6] }, B: { e: [62, 20], w: [50, 30] } },
+  lateral: { eq: { db: 1 }, front: 1,
+    A: { s: [60, 23], hp: [60, 54], e: [55, 38], w: [54, 52], e2: [65, 38], w2: [66, 52], k: [56, 72], a: [55, 90], k2: [64, 72], a2: [65, 90] },
+    B: { e: [46, 24], w: [32, 22], e2: [74, 24], w2: [88, 22] } },
+  hammer:  { eq: { db: 1 },  A: { ...STAND, w: [63, 53] }, B: { w: [72, 26] } },
+  bbcurl:  { eq: { bar: 1 }, A: { ...STAND, w: [63, 53] }, B: { w: [73, 27] } },
+  ohp:     { eq: { bar: 1 }, A: { ...STAND, e: [67, 36], w: [66, 23] }, B: { e: [62, 10], w: [61, -3] } },
+  lunge:   { eq: { db: 1 }, A: { ...STAND }, B: { s: [58, 33], hp: [58, 63], e: [58, 47], w: [58, 61], k: [75, 70], a: [74, 90], k2: [50, 87], a2: [34, 89] } },
+  bss:     { eq: { bench: [14, 44, 66], db: 1 },
+    A: { s: [60, 22], hp: [60, 52], e: [60, 36], w: [60, 50], k: [62, 70], a: [64, 90], k2: [50, 70], a2: [36, 64] },
+    B: { s: [58, 34], hp: [57, 64], e: [58, 48], w: [58, 62], k: [76, 68], a: [72, 90], k2: [48, 86], a2: [34, 64] } },
+  dbrow:   { eq: { bench: [26, 80, 64], db: 1, one: 1 },
+    A: { s: [40, 48], hp: [70, 48], e: [48, 62], w: [48, 76], e2: [38, 56], w2: [36, 63], k: [80, 70], a: [86, 90], k2: [68, 63], a2: [80, 62] },
+    B: { e: [58, 40], w: [54, 53] } },
+  plank:   { eq: { mat: 1 },
+    A: { s: [36, 84], hp: [64, 87], e: [36, 90], w: [48, 90], k: [80, 88], a: [96, 89] },
+    B: { s: [36, 74], hp: [64, 77], k: [80, 81], a: [96, 86] } },
+  deadbug: { eq: { mat: 1 },
+    A: { s: [36, 85], hp: [62, 85], e: [36, 72], w: [36, 59], k: [62, 69], a: [76, 69] },
+    B: { e: [26, 76], w: [13, 72], e2: [36, 72], w2: [36, 59], k2: [78, 80], a2: [95, 79] } },
+  twist:   { eq: { mat: 1, db: 1 },
+    A: { s: [44, 62], hp: [56, 87], e: [54, 74], w: [62, 66], k: [74, 70], a: [88, 88] },
+    B: { e: [52, 78], w: [64, 86] } }
+};
+function normPose(p) {
+  const q = { ...p };
+  if (!q.e2) q.e2 = q.e; if (!q.w2) q.w2 = q.w;
+  if (!q.k2) q.k2 = q.k; if (!q.a2) q.a2 = q.a;
+  return q;
+}
+function lerpPose(A, B, t) {
+  const o = {};
+  Object.keys(A).forEach(k => { o[k] = [A[k][0] + (B[k][0] - A[k][0]) * t, A[k][1] + (B[k][1] - A[k][1]) * t]; });
+  return o;
+}
+function figSVG(exId, step) {
+  const d = POSES[exId];
+  if (!d) return '';
+  const A = normPose(d.A), B = normPose({ ...d.A, ...d.B }), eq = d.eq || {};
+  const pose = step <= 1 ? A : step === 3 ? B : lerpPose(A, B, 0.5);
+  const L = (p, q, c, w) => `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${c}" stroke-width="${w || 4.2}" stroke-linecap="round"/>`;
+  const P = pose, fg = '#eef2f6', bg = '#8b95a3';
+  let svg = '';
+  // vloer / mat / bank
+  if (eq.mat) svg += `<rect x="6" y="91" width="108" height="4" rx="2" fill="#1e3a5f"/>`;
+  else svg += `<line x1="4" y1="92.5" x2="116" y2="92.5" stroke="#3a414c" stroke-width="1.5"/>`;
+  if (eq.bench) {
+    const [x1, x2, top] = eq.bench;
+    svg += `<line x1="${x1 + 5}" y1="${top + 4}" x2="${x1 + 5}" y2="92" stroke="#4b5563" stroke-width="3"/>
+            <line x1="${x2 - 5}" y1="${top + 4}" x2="${x2 - 5}" y2="92" stroke="#4b5563" stroke-width="3"/>
+            <rect x="${x1}" y="${top}" width="${x2 - x1}" height="5" rx="2" fill="#64748b"/>`;
+  }
+  // bewegingspijl
+  if (step === 2 || step === 4) {
+    const keys = ['w', 'w2', 'hp', 'a2', 'k2', 's'];
+    let best = 'w', dist = -1;
+    keys.forEach(k => { const dd = Math.hypot(B[k][0] - A[k][0], B[k][1] - A[k][1]); if (dd > dist + 3) { dist = dd; best = k; } });
+    let from = A[best], to = B[best];
+    if (step === 4) [from, to] = [to, from];
+    const mx = (from[0] + to[0]) / 2, my = (from[1] + to[1]) / 2;
+    const dx = to[0] - from[0], dy = to[1] - from[1], len = Math.hypot(dx, dy) || 1;
+    const off = 9, cx = mx - dy / len * off, cy = my + dx / len * off;
+    const ang = Math.atan2(to[1] - cy, to[0] - cx), ah = 5;
+    const p1 = [to[0] - ah * Math.cos(ang - 0.5), to[1] - ah * Math.sin(ang - 0.5)];
+    const p2 = [to[0] - ah * Math.cos(ang + 0.5), to[1] - ah * Math.sin(ang + 0.5)];
+    svg += `<path d="M${from[0]} ${from[1]} Q${cx} ${cy} ${to[0]} ${to[1]}" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-dasharray="4 3" stroke-linecap="round"/>
+            <polygon points="${to[0]},${to[1]} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}" fill="#f59e0b"/>`;
+  }
+  // achterste ledematen (gedimd)
+  svg += L(P.hp, P.k2, bg) + L(P.k2, P.a2, bg) + L(P.s, P.e2, bg) + L(P.e2, P.w2, bg);
+  // romp, hoofd, voorste ledematen
+  const dx = P.s[0] - P.hp[0], dy = P.s[1] - P.hp[1], dl = Math.hypot(dx, dy) || 1;
+  const head = [P.s[0] + dx / dl * 9, P.s[1] + dy / dl * 9];
+  svg += L(P.hp, P.s, fg, 5) + `<circle cx="${head[0]}" cy="${head[1]}" r="6" fill="${fg}"/>`;
+  svg += L(P.hp, P.k, fg) + L(P.k, P.a, fg) + L(P.s, P.e, fg) + L(P.e, P.w, fg);
+  // materiaal in de hand
+  const hands = eq.one ? [P.w] : (d.front ? [P.w, P.w2] : [P.w]);
+  hands.forEach(h => {
+    if (eq.bar) svg += `<circle cx="${h[0]}" cy="${h[1]}" r="8.5" fill="#1f2937" stroke="#9ca3af" stroke-width="2.5"/><circle cx="${h[0]}" cy="${h[1]}" r="2" fill="#9ca3af"/>`;
+    if (eq.db) svg += `<rect x="${h[0] - 6}" y="${h[1] - 3}" width="12" height="6" rx="2" fill="#9ca3af"/><rect x="${h[0] - 7.5}" y="${h[1] - 4.5}" width="3.5" height="9" rx="1" fill="#cbd5e1"/><rect x="${h[0] + 4}" y="${h[1] - 4.5}" width="3.5" height="9" rx="1" fill="#cbd5e1"/>`;
+  });
+  // grip markeren
+  if (step === 1) hands.forEach(h => { svg += `<circle cx="${h[0]}" cy="${h[1]}" r="12" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="3 2.5"/>`; });
+  return `<svg viewBox="0 -12 120 112" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+}
+
+/* =========================================================
+   UITLEG MODAL
+   ========================================================= */
+function showHowto(exId) {
+  const ex = EXERCISES[exId]; if (!ex) return;
+  const steps = ex.steps.slice(0, 5).map((t, k) => `
+    <div class="stepcard">
+      <div class="ph" aria-hidden="true">${figSVG(exId, k)}<div class="n">${k + 1}</div></div>
+      <div class="t"><b>${k + 1}. ${STEP_LABELS[k]}</b>${esc(t)}</div>
+    </div>`).join('');
+  openOverlay(`
+    <div class="sheet-head"><h3>${esc(ex.name)}</h3><button class="iconbtn" data-action="closeOverlay" aria-label="Sluiten">✕</button></div>
+    <div class="focus" style="margin:-6px 0 6px">🎯 Focus: <b>${esc(ex.muscles || '')}</b></div>
+    <div class="equip" style="margin-top:0">Materiaal: ${esc(ex.equip)}</div>
+    <div class="steps">${steps}</div>
+    <div class="tips"><h4>Aandachtspunten</h4><ul>${ex.tips.map(t => `<li>${esc(t)}</li>`).join('')}<li>Kies een gewicht waarmee je de techniek goed kunt uitvoeren.</li></ul></div>
+    <button class="btn primary full" style="margin-top:14px" data-action="closeOverlay">Begrepen</button>`);
+}
+
+/* =========================================================
+   SHEET / OVERLAY
+   ========================================================= */
+let sheetHandlers = [];
+function openOverlay(html) {
+  $('#sheet').innerHTML = html;
+  $('#overlay').classList.add('open');
+  $('#sheet').scrollTop = 0;
+}
+function closeOverlay() { $('#overlay').classList.remove('open'); sheetHandlers = []; }
+function showSheet(title, text, buttons) {
+  sheetHandlers = buttons.map(b => b.fn);
+  openOverlay(`
+    <div class="sheet-head"><h3>${esc(title)}</h3></div>
+    <p class="sheet-text">${text}</p>
+    <div class="sheet-btns">${buttons.map((b, k) => `<button class="btn full ${b.cls}" data-action="sheetBtn" data-k="${k}">${esc(b.label)}</button>`).join('')}</div>`);
+}
+$('#overlay').addEventListener('click', e => { if (e.target.id === 'overlay') closeOverlay(); });
+
+/* =========================================================
+   RUSTTIMER
+   ========================================================= */
+const timer = { endAt: 0, total: 0, iv: null, running: false, done: false, label: '' };
+let audioCtx = null;
+
+function unlockAudio() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch (e) { audioCtx = null; }
+}
+function beep() {
+  if (!state.settings.sound || !audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    [0, 0.3, 0.6].forEach((t, k) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = k === 2 ? 1320 : 880;
+      g.gain.setValueAtTime(0.0001, now + t);
+      g.gain.exponentialRampToValueAtTime(0.4, now + t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + t + 0.22);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(now + t); o.stop(now + t + 0.25);
+    });
+  } catch (e) {}
+}
+function startTimer(sec, label) {
+  unlockAudio();
+  clearInterval(timer.iv);
+  timer.total = sec; timer.endAt = Date.now() + sec * 1000;
+  timer.running = true; timer.done = false; timer.label = label || '';
+  const el = $('#timer');
+  el.classList.remove('done'); el.classList.add('open');
+  $('#timerLabel').textContent = 'RUST';
+  $('#timerEx').textContent = timer.label;
+  $('#timerSub').textContent = 'resterend';
+  $('#timerMain').textContent = 'Rust overslaan';
+  tick();
+  timer.iv = setInterval(tick, 250);
+}
+function tick() {
+  if (!timer.running) return;
+  const ms = timer.endAt - Date.now();
+  const left = Math.max(0, Math.ceil(ms / 1000));
+  $('#timerNum').textContent = fmtTime(left);
+  $('#ring').style.setProperty('--p', timer.total ? Math.max(0, ms) / (timer.total * 1000) : 0);
+  $('#tpill').textContent = '⏱ ' + fmtTime(left);
+  if (ms <= 0) timerDone();
+}
+function timerDone() {
+  clearInterval(timer.iv);
+  timer.running = false; timer.done = true;
+  const el = $('#timer');
+  el.classList.add('open', 'done');
+  $('#timerLabel').textContent = 'RUST VOORBIJ';
+  $('#timerNum').textContent = 'GO!';
+  $('#timerSub').textContent = 'Volgende set';
+  $('#timerMain').textContent = 'Sluiten';
+  updatePill();
+  beep();
+  if (navigator.vibrate) { try { navigator.vibrate([300, 150, 300, 150, 500]); } catch (e) {} }
+}
+function closeTimer() {
+  clearInterval(timer.iv);
+  timer.running = false; timer.done = false;
+  $('#timer').classList.remove('open', 'done');
+  updatePill();
+}
+function hideTimer() { $('#timer').classList.remove('open'); updatePill(); }
+function showTimer() { if (timer.running) $('#timer').classList.add('open'); updatePill(); }
+function adjustTimer(v) {
+  if (!timer.running) return;
+  timer.endAt = Math.max(Date.now() + 1000, timer.endAt + v * 1000);
+  if (v > 0) timer.total += v;
+  tick();
+}
+function updatePill() {
+  const show = timer.running && !$('#timer').classList.contains('open');
+  $('#tpill').classList.toggle('show', show);
+}
+
+/* Scherm aan houden tijdens training */
+let wakeLock = null;
+async function keepAwake(on) {
+  try {
+    if (on && 'wakeLock' in navigator && !wakeLock && document.visibilityState === 'visible') {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+    } else if (!on && wakeLock) {
+      await wakeLock.release(); wakeLock = null;
+    }
+  } catch (e) { wakeLock = null; }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    keepAwake(view === 'train' && !!state.activeSession);
+    if (timer.running) tick();
+  }
+});
+
+/* =========================================================
+   HISTORIE
+   ========================================================= */
+function renderHistory() {
+  const h = sortedHistory(false);
+  const list = h.length ? h.map(s => {
+    const d = doneSets(s), t = totalSets(s);
+    return `<button class="hitem" data-action="nav" data-to="history/${s.id}">
+      <div class="hl">${esc(s.workoutId)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="hdate">${fmtLong(s.date)}</div>
+        <div class="hw">${esc(s.workoutName)}</div>
+        <div class="hstat ${s.status === 'completed' ? 'ok' : 'part'}">${s.status === 'completed' ? '✓ Voltooid' : `◐ Deels voltooid (${d}/${t} sets)`}</div>
+      </div><div class="warrow">›</div></button>`;
+  }).join('') : `<div class="empty card"><div class="big">🗓️</div>Nog geen trainingen opgeslagen.<br>Start een workout op het beginscherm.</div>`;
+  return `
+    <div class="topbar"><button class="iconbtn" data-action="nav" data-to="home" aria-label="Terug">←</button><h2>Trainingshistorie</h2></div>
+    ${h.length ? `<div class="summary">
+      <div><b>${h.length}</b><small>trainingen</small></div>
+      <div><b>${h.filter(x => x.status === 'completed').length}</b><small>voltooid</small></div>
+      <div><b>${h.reduce((a, x) => a + doneSets(x), 0)}</b><small>sets totaal</small></div>
+    </div>` : ''}
+    <div class="hlist">${list}</div>`;
+}
+function renderHistoryDetail(id) {
+  const s = state.history.find(x => x.id === id);
+  if (!s) return `<div class="topbar"><button class="iconbtn" data-action="nav" data-to="history">←</button><h2>Training</h2></div><div class="empty card">Training niet gevonden.</div>`;
+  const ex = s.exercises.map(e => `
+    <div class="dex">
+      <div class="dex-h"><div class="dex-n">${esc(e.name)}</div><div class="dex-s">${e.completed.filter(Boolean).length}/${e.sets} sets · ${esc(e.reps)} reps</div></div>
+      <div class="dex-w">
+        ${PEOPLE.map(p => { const n = e.notes && e.notes[p]; const r = n && n.rating ? RATINGS[n.rating] : null;
+          return `<div><small>${esc(pname(p))}</small><b>${fmtSets(wArr(e, p))}</b>${r ? `<span class="rbadge ${r.cls}" style="margin-top:6px">${r.ic} ${r.label}</span>` : ''}${n && n.text ? `<span class="ptext" style="display:block;margin-top:4px">“${esc(n.text)}”</span>` : ''}</div>`; }).join('')}
+      </div>
+    </div>`).join('');
+  return `
+    <div class="topbar"><button class="iconbtn" data-action="nav" data-to="history" aria-label="Terug">←</button><h2>${esc(s.workoutName)}</h2></div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="hdate">${fmtLong(s.date)}</div>
+      <div class="hstat ${s.status === 'completed' ? 'ok' : 'part'}">${s.status === 'completed' ? '✓ Voltooid' : '◐ Deels voltooid'}</div>
+      <div class="muted" style="font-size:14px;margin-top:4px">${doneSets(s)}/${totalSets(s)} sets · ${s.durationMin || '—'} min</div>
+    </div>
+    ${ex}
+    <button class="btn danger full" style="margin-top:10px" data-action="delSession" data-id="${s.id}">Training verwijderen</button>`;
+}
+
+/* =========================================================
+   PROGRESSIE
+   ========================================================= */
+const prog = { p: 'p1', ex: null };
+function progressPoints(exId, p) {
+  const pts = [];
+  sortedHistory(true).forEach(s => {
+    const e = s.exercises.find(x => x.exId === exId);
+    if (e) { const a = wArr(e, p); if (hasW(a)) pts.push({ date: s.date, w: maxW(a), sets: a }); }
+  });
+  return pts;
+}
+function chartSVG(pts) {
+  const W = 600, H = 240, pl = 48, pr = 18, pt = 18, pb = 34;
+  let min = Math.min(...pts.map(x => x.w)), max = Math.max(...pts.map(x => x.w));
+  if (min === max) { min -= 2.5; max += 2.5; }
+  const pad = (max - min) * 0.12; min = Math.max(0, min - pad); max += pad;
+  const X = i => pl + (pts.length === 1 ? (W - pl - pr) / 2 : i * (W - pl - pr) / (pts.length - 1));
+  const Y = w => pt + (1 - (w - min) / (max - min)) * (H - pt - pb);
+  let grid = '';
+  for (let g = 0; g <= 3; g++) {
+    const v = min + (max - min) * g / 3, y = Y(v);
+    grid += `<line x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}" stroke="#2a2f37" stroke-width="1"/>
+             <text x="${pl - 8}" y="${y + 4}" fill="#9aa3ae" font-size="13" text-anchor="end">${numNL(Math.round(v * 2) / 2)}</text>`;
+  }
+  const line = pts.map((x, i) => `${X(i)},${Y(x.w)}`).join(' ');
+  const area = `${X(0)},${H - pb} ${line} ${X(pts.length - 1)},${H - pb}`;
+  const dots = pts.map((x, i) => `<circle cx="${X(i)}" cy="${Y(x.w)}" r="5" fill="#22c55e" stroke="#0d0f12" stroke-width="2"/>`).join('');
+  const step = Math.max(1, Math.ceil(pts.length / 6));
+  const labels = pts.map((x, i) => (i % step === 0 || i === pts.length - 1) ? `<text x="${X(i)}" y="${H - 10}" fill="#9aa3ae" font-size="13" text-anchor="middle">${fmtShort(x.date)}</text>` : '').join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gewichtsontwikkeling">
+    <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22c55e" stop-opacity=".35"/><stop offset="1" stop-color="#22c55e" stop-opacity="0"/></linearGradient></defs>
+    ${grid}<polygon points="${area}" fill="url(#ga)"/>
+    <polyline points="${line}" fill="none" stroke="#22c55e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    ${dots}${labels}</svg>`;
+}
+function renderProgress() {
+  if (!prog.ex) {
+    const withData = Object.values(WORKOUTS).flatMap(w => w.exercises.map(e => e.ex)).find(id => progressPoints(id, prog.p).length);
+    prog.ex = withData || 'bench';
+  }
+  const options = Object.values(WORKOUTS).map(w => `<optgroup label="${w.name}">${w.exercises.map(e =>
+      `<option value="${e.ex}" ${prog.ex === e.ex ? 'selected' : ''}>${esc(EXERCISES[e.ex].name)}</option>`).join('')}</optgroup>`).join('')
+    + (() => {
+      const inSchema = new Set(Object.values(WORKOUTS).flatMap(w => w.exercises.map(e => e.ex)));
+      const old = [];
+      state.history.forEach(s => s.exercises.forEach(e => { if (!inSchema.has(e.exId) && !old.includes(e.exId)) old.push(e.exId); }));
+      return old.length ? `<optgroup label="Niet meer in schema">${old.map(id => `<option value="${esc(id)}" ${prog.ex === id ? 'selected' : ''}>${esc(exInfo(id).name)}</option>`).join('')}</optgroup>` : '';
+    })();
+  const pts = progressPoints(prog.ex, prog.p);
+  let body;
+  if (!pts.length) {
+    body = `<div class="empty card" style="margin-top:14px"><div class="big">📈</div>Nog geen gewichten opgeslagen voor deze oefening.</div>`;
+  } else {
+    const first = pts[0].w, last = pts[pts.length - 1].w, best = Math.max(...pts.map(x => x.w)), diff = Math.round((last - first) * 100) / 100;
+    const rows = pts.map((x, i) => {
+      let delta = '';
+      if (i > 0) {
+        const d = Math.round((x.w - pts[i - 1].w) * 100) / 100;
+        delta = d > 0 ? `<span class="delta up">+${numNL(d)} kg</span>` : d < 0 ? `<span class="delta down">${numNL(d)} kg</span>` : `<span class="delta same">=</span>`;
+      } else delta = '<span class="delta same">start</span>';
+      return `<div class="prow"><span class="d">${fmtShort(x.date)}</span><span class="w">${fmtKg(x.w)}<small class="psets">${fmtSets(x.sets)}</small></span>${delta}</div>`;
+    }).join('');
+    body = `
+      <div class="summary" style="margin-top:14px">
+        <div><b>${fmtKg(last)}</b><small>huidig</small></div>
+        <div><b>${fmtKg(best)}</b><small>hoogste</small></div>
+        <div><b class="${diff > 0 ? 'up' : diff < 0 ? 'down' : ''}">${diff > 0 ? '+' : ''}${numNL(diff)} kg</b><small>sinds start</small></div>
+      </div>
+      ${pts.length > 1 ? `<div class="card chartwrap">${chartSVG(pts)}</div>` : ''}
+      <div class="eyebrow" style="margin:18px 4px 8px">${esc(exInfo(prog.ex).name)} – ${esc(pname(prog.p))} · zwaarste set per training</div>
+      <div class="card plist" style="padding:0">${rows}</div>`;
+  }
+  return `
+    <div class="topbar"><button class="iconbtn" data-action="nav" data-to="home" aria-label="Terug">←</button><h2>Progressie</h2></div>
+    <div class="seg">${PEOPLE.map(p => `<button class="${prog.p === p ? 'on' : ''}" data-action="progP" data-p="${p}">${esc(pname(p))}</button>`).join('')}</div>
+    <select class="select" data-input="progEx" aria-label="Oefening">${options}</select>
+    ${body}`;
+}
+
+/* =========================================================
+   INSTELLINGEN
+   ========================================================= */
+function renderSettings() {
+  const st = state.settings;
+  return `
+    <div class="topbar"><button class="iconbtn" data-action="nav" data-to="home" aria-label="Terug">←</button><h2>Instellingen</h2></div>
+    <div class="stitle">Namen</div>
+    <div class="card">
+      <div class="field"><label for="n1">Persoon 1</label><input id="n1" class="tinput" data-input="name" data-p="p1" value="${esc(state.users.p1.name)}" maxlength="20" autocomplete="off"></div>
+      <div class="field" style="margin-bottom:0"><label for="n2">Persoon 2</label><input id="n2" class="tinput" data-input="name" data-p="p2" value="${esc(state.users.p2.name)}" maxlength="20" autocomplete="off"></div>
+    </div>
+    <div class="stitle">Training</div>
+    <div class="card">
+      <div class="field"><label>Stapgrootte − / + knoppen</label>
+        <div class="stepsel">${[1, 1.25, 2, 2.5].map(v => `<button class="${Number(st.step) === v ? 'on' : ''}" data-action="setStep" data-v="${v}">${numNL(v)} kg</button>`).join('')}</div>
+      </div>
+      <div class="toggle"><div class="tt">Rusttimer automatisch starten<small>Na het afvinken van een set</small></div><button class="sw ${st.autoTimer ? 'on' : ''}" data-action="toggle" data-k="autoTimer" aria-label="Automatische rusttimer"></button></div>
+      <div class="toggle"><div class="tt">Geluid bij einde rust<small>Trillen gebeurt waar ondersteund</small></div><button class="sw ${st.sound ? 'on' : ''}" data-action="toggle" data-k="sound" aria-label="Geluid"></button></div>
+    </div>
+    <div class="stitle">Data</div>
+    <div class="card">
+      <p class="muted" style="margin:0 0 14px">Alle gegevens worden alleen lokaal op dit apparaat in de browser opgeslagen (${state.history.length} trainingen).</p>
+      <button class="btn danger full" data-action="wipe">Alle opgeslagen data verwijderen</button>
+    </div>`;
+}
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+const actions = {
+  nav: d => go(d.to),
+  start: d => startWorkout(d.id),
+  resume: () => go('train'),
+  jump: d => { const s = state.activeSession; if (!s) return; s.current = Number(d.i); saveState(); render(); window.scrollTo(0, 0); },
+  prev: () => { const s = state.activeSession; if (!s || s.current === 0) return; s.current--; saveState(); render(); window.scrollTo(0, 0); },
+  next: () => { const s = state.activeSession; if (!s) return; if (s.current < s.exercises.length - 1) { s.current++; saveState(); render(); window.scrollTo(0, 0); } },
+  finish: () => askFinish(),
+  stop: () => askStop(),
+  inc: d => stepWeight(d.p, Number(d.k), 1),
+  dec: d => stepWeight(d.p, Number(d.k), -1),
+  rate: d => setRating(d.p, d.r),
+  set: d => toggleSet(Number(d.k)),
+  rest: () => { const s = state.activeSession; if (!s) return; const e = s.exercises[s.current]; startTimer(e.rest, e.name); },
+  howto: d => showHowto(d.ex),
+  closeOverlay: () => closeOverlay(),
+  sheetBtn: d => { const fn = sheetHandlers[Number(d.k)]; closeOverlay(); if (fn) fn(); },
+  tAdj: d => adjustTimer(Number(d.v)),
+  tClose: () => closeTimer(),
+  tHide: () => hideTimer(),
+  tShow: () => showTimer(),
+  progP: d => { prog.p = d.p; render(); },
+  setStep: d => { state.settings.step = Number(d.v); saveState(); render(); },
+  toggle: d => { state.settings[d.k] = !state.settings[d.k]; saveState(); render(); },
+  delSession: d => showSheet('Training verwijderen?', 'Deze training wordt definitief uit de historie verwijderd.', [
+    { label: 'Verwijderen', cls: 'danger', fn: () => { state.history = state.history.filter(x => x.id !== d.id); saveState(); toast('Verwijderd'); go('history'); } },
+    { label: 'Annuleren', cls: 'text', fn: () => {} }
+  ]),
+  wipe: () => showSheet('Alle data verwijderen?', 'Namen, trainingshistorie, gewichten en de lopende training worden definitief van dit apparaat verwijderd.', [
+    { label: 'Ja, alles verwijderen', cls: 'danger', fn: () => {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      state = clone(DEFAULT_STATE); prog.ex = null; prog.p = 'p1';
+      closeTimer(); saveState(); toast('Alle data verwijderd'); go('home'); } },
+    { label: 'Annuleren', cls: 'text', fn: () => {} }
+  ])
+};
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]');
+  if (!el || el.disabled) return;
+  const fn = actions[el.dataset.action];
+  if (fn) { e.preventDefault(); fn(el.dataset, el); }
+});
+
+document.addEventListener('input', e => {
+  const el = e.target; const t = el.dataset && el.dataset.input;
+  if (t === 'weight') setWeight(el.dataset.p, Number(el.dataset.k), parseKg(el.value));
+  else if (t === 'note') { const s = state.activeSession; if (s) { s.exercises[s.current].notes[el.dataset.p].text = el.value; saveState(); } }
+  else if (t === 'name') { state.users[el.dataset.p].name = el.value.trim() || (el.dataset.p === 'p1' ? 'Persoon 1' : 'Persoon 2'); saveState(); }
+});
+document.addEventListener('change', e => {
+  const el = e.target; const t = el.dataset && el.dataset.input;
+  if (t === 'weight') { const v = parseKg(el.value); el.value = v === null ? '' : numNL(v); fillForward(el.dataset.p, Number(el.dataset.k), focusOld); }
+  else if (t === 'name') toast('Naam opgeslagen');
+  else if (t === 'progEx') { prog.ex = el.value; render(); }
+});
+let focusOld = null;
+document.addEventListener('focusin', e => {
+  if (e.target.dataset && e.target.dataset.input === 'weight') focusOld = parseKg(e.target.value);
+  if (e.target.dataset && e.target.dataset.input === 'weight') setTimeout(() => e.target.select(), 30);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.input === 'weight') e.target.blur();
+  if (e.key === 'Escape') { if ($('#overlay').classList.contains('open')) closeOverlay(); else if ($('#timer').classList.contains('open')) hideTimer(); }
+});
+
+/* Start */
+route();
+</script>
+</body>
+</html>
